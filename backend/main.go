@@ -23,29 +23,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
-	// e := echo.New()
-
-	// // Middleware
-	// e.Use(middleware.Logger())
-	// e.Use(middleware.Recover())
-
-	// // Routes
-	// // e.GET("/", handler)
-
-	// // Start server
-	// // e.Logger.Fatal(e.Start(":1323"))
-
-	// e.GET("/", handler)
-	// e.GET("/", func(c echo.Context) error {
-	// 	return c.String(http.StatusOK, "Hello, World!")
-	// })
-
-	// e.Post("/message", message)
-	// e.GET("/messages", messages)
-
-	// e.Logger.Fatal(e.Start(":8080"))
-
 	http.HandleFunc("/", handler)
 
 	http.HandleFunc("/message", message)
@@ -58,7 +35,6 @@ type RequestBody struct {
 }
 
 func message(w http.ResponseWriter, r *http.Request) {
-
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")

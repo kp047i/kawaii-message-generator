@@ -63,6 +63,10 @@ func message(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	log.Println("★★★POST TEST★★★")
+	log.Println(requestBody.Image)
+	log.Println("★★★★★★★★★★★★★★★")
+
 	// insertRow := Message{Image: requestBody.Image}
 	// db..Create(&insertRow)
 	_, err = db.Exec("INSERT INTO messages (image) VALUES (" + requestBody.Image + ")")

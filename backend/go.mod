@@ -1,3 +1,3 @@
-module github.com/kp047i/kawaii-message-generator
+module github.com/kp047i/kawaii-message-generator.git
 
-go 1.20.5
+go 1.22.2

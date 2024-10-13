@@ -106,11 +106,6 @@ func getMessages() []*Message {
 	}
 	log.Println("DB接続成功!!!")
 
-	// _, err = db.Exec("INSERT INTO messages (image) VALUES ('test1')")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	results, err := db.Query("SELECT * FROM messages")
 	if err != nil {
 		panic(err)

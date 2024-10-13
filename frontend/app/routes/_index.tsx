@@ -10,10 +10,7 @@ import {
 } from "../components/ui/card";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  CreateMessage,
-  createMessageSchema,
-} from "../features/message/createMessage/schema";
+
 import {
   Form,
   FormControl,
@@ -22,8 +19,16 @@ import {
   FormLabel,
   FormMessage,
 } from "../components/ui/form";
-import { Textarea } from "../components/ui/textarea";
 import OpenAI from "openai";
+import { CreateMessage, createMessageSchema } from "../features/message/schema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import { CHARACTERS, THEMES } from "../features/message/constants";
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
@@ -36,10 +41,26 @@ const client = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-const selectedAnimal = "cat";
+function prompt(selected_style: string, selected_animal: string) {
+  return `
+    Generate a kawaii ${selected_style} image featuring a {selected_animal} holding a blank message card.
+    This image is to express gratitude to those who have supported me.
 
-const prompt =
-  `A cute anime-style message card with a 4:3 aspect ratio, where the card is always centered and occupies about 50% of the width and 30% of the height of the image. The card is being held by a ${selectedAnimal}, which has its paws resting on the top corners of the card. The card is placed exactly in the middle of the image with enough blank space for writing a message. The background is filled with pastel colors and cute decorations like stars, hearts, and clouds. The overall theme is 'kawaii' with a soft, playful design. The layout and size of the card should remain consistent in every image.`;
+    The card must be centered exactly in the middle of the image, with the animal holding it directly from the sides.
+    The card must take up exactly 70% of the width and 30% of the height of the image, and it should be perfectly horizontal with no tilt or rotation.
+    The edges of the card should be sharp and clear, and the card itself should remain completely blank, with no text or decorations of any kind. 
+
+    The card is being held by a ${selected_animal}.
+    The card is placed exactly in the middle of the image with enough blank space for writing a message.
+    The card should be large and prominent, taking up a significant portion of the image, while still leaving enough space for the {selected_animal} to be visible holding it.
+    The card should appear larger than the animal, drawing more attention, while the animal remains cute and secondary.
+
+    The background should be soft, using pastel colors, and feature small, simple kawaii elements such as stars, clouds, and hearts.
+    These background elements should be positioned only around the edges of the image, so they do not overlap or interfere with the card or the animal.
+
+    Ensure the overall theme is kawaii, with a soft, playful design.
+    The card must always be prominent, and the background elements should not distract from the central card and animal figure.`;
+}
 
 export default function Index() {
   const form = useForm<CreateMessage>({
@@ -48,14 +69,15 @@ export default function Index() {
 
   async function onSubmit(data: CreateMessage) {
     console.log(data);
-    // const res = await client.images.generate({
-    //   model: "dall-e-3",
-    //   size: "1024x1024",
-    //   quality: "standard",
-    //   n: 1,
-    //   style: "vivid",
-    //   prompt
-    // });
+    const res = await client.images.generate({
+      model: "dall-e-3",
+      size: "1024x1024",
+      quality: "standard",
+      n: 1,
+      style: "vivid",
+      prompt: prompt(data.theme, data.character),
+    });
+    console.log(res);
   }
 
   return (
@@ -70,12 +92,61 @@ export default function Index() {
             <CardContent>
               <FormField
                 control={form.control}
-                name="message"
+                name="theme"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>メッセージ</FormLabel>
+                    <FormLabel>テーマ</FormLabel>
                     <FormControl>
-                      <Textarea {...field} />
+                      <Select
+                        {...field}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                        }}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="テーマ" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {THEMES.map((theme) => (
+                            <SelectItem key={theme.value} value={theme.value}>
+                              {theme.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="character"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>キャラクター</FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                        }}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="キャラクター" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {CHARACTERS.map((character) => (
+                            <SelectItem
+                              key={character.value}
+                              value={character.value}
+                            >
+                              {character.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -83,7 +154,9 @@ export default function Index() {
               />
             </CardContent>
             <CardFooter>
-              <Button disabled={form.formState.isSubmitting}>カードを作成</Button>
+              <Button disabled={form.formState.isSubmitting}>
+                カードを作成
+              </Button>
             </CardFooter>
           </form>
         </Form>

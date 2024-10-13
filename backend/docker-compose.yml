@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: app.dockerfile
+    tty: true
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app

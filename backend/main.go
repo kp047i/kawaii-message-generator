@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type Message struct {
@@ -79,6 +81,11 @@ func getMessages() []*Message {
 		panic(err)
 	}
 	defer db.Close()
+
+	if err := db.Ping(); err != nil {
+		log.Println("DB接続エラー")
+	}
+	log.Println("DB接続成功!!!")
 
 	results, err := db.Query("SELECT * FROM messages")
 	if err != nil {

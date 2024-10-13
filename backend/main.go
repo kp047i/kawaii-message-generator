@@ -53,7 +53,7 @@ func message(w http.ResponseWriter, r *http.Request) {
 
 	// insertRow := Message{Image: requestBody.Image}
 	// db..Create(&insertRow)
-	_, err = db.Exec("INSERT INTO messages (image) VALUES " + requestBody.Image)
+	_, err = db.Exec("INSERT INTO messages (image) VALUES (" + requestBody.Image + ")")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -86,6 +86,11 @@ func getMessages() []*Message {
 		log.Println("DB接続エラー")
 	}
 	log.Println("DB接続成功!!!")
+
+	_, err = db.Exec("INSERT INTO messages (image) VALUES ('test1')")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	results, err := db.Query("SELECT * FROM messages")
 	if err != nil {

@@ -24,7 +24,7 @@ def generate_kawaii_image(selected_animal, prompt, file_name):
 
 selected_animal = "dog"
 base_prompt = """
-    Generate a kawaii anime-style image featuring an animal holding a blank message card.
+    Generate a kawaii anime-style image featuring a {selected_animal} holding a blank message card.
 
     The card must be centered exactly in the middle of the image, with the animal holding it directly from the sides.
     The card must take up exactly 70% of the width and 30% of the height of the image, and it should be perfectly horizontal with no tilt or rotation.
@@ -33,14 +33,15 @@ base_prompt = """
     The card is being held by a {selected_animal}.
     The card is placed exactly in the middle of the image with enough blank space for writing a message.
 
-    The background is filled with pastel colors and cute decorations like stars, hearts, and clouds.
-    These elements should be faint and positioned around the edges of the image to avoid interfering with the card or the animal.
+    The background should be soft, using pastel colors, and feature small, simple kawaii elements such as stars, clouds, and hearts.
+    These background elements should be positioned only around the edges of the image, so they do not overlap or interfere with the card or the animal.
 
-    The overall design should be soft and playful, with a focus on kawaii aesthetics, ensuring that the card's position, size, and shape are consistent across multiple generations.
+    Ensure the overall theme is kawaii, with a soft, playful design.
+    The card must always be prominent, and the background elements should not distract from the central card and animal figure.
 """
 
 for i in range(3):
     # プロンプトに動物の種類を埋め込む
     prompt = base_prompt.format(selected_animal=selected_animal)
-    file_name = f"img/kawaii_image_{i + 1}.png"
+    file_name = f"output/kawaii_image_{i + 1}.png"
     generate_kawaii_image(selected_animal, prompt, file_name)

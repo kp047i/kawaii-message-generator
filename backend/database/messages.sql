@@ -4,3 +4,5 @@ CREATE TABLE `messages`
   image varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 );
+
+INSERT INTO messages (`image`) VALUES ('test1');

@@ -16,11 +16,38 @@ type Message struct {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	fmt.Fprintf(w, "Hello World")
 }
 
 func main() {
+
+	// e := echo.New()
+
+	// // Middleware
+	// e.Use(middleware.Logger())
+	// e.Use(middleware.Recover())
+
+	// // Routes
+	// // e.GET("/", handler)
+
+	// // Start server
+	// // e.Logger.Fatal(e.Start(":1323"))
+
+	// e.GET("/", handler)
+	// e.GET("/", func(c echo.Context) error {
+	// 	return c.String(http.StatusOK, "Hello, World!")
+	// })
+
+	// e.Post("/message", message)
+	// e.GET("/messages", messages)
+
+	// e.Logger.Fatal(e.Start(":8080"))
+
 	http.HandleFunc("/", handler)
+
 	http.HandleFunc("/message", message)
 	http.HandleFunc("/messages", messages)
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -31,6 +58,11 @@ type RequestBody struct {
 }
 
 func message(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
 	// リクエストボディの読み取り
 	var requestBody RequestBody
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
@@ -71,6 +103,9 @@ func message(w http.ResponseWriter, r *http.Request) {
 // ------------------------------------------------------------------------------------------
 
 func messages(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	messages := getMessages()
 	json.NewEncoder(w).Encode(messages)
 }
@@ -87,10 +122,10 @@ func getMessages() []*Message {
 	}
 	log.Println("DB接続成功!!!")
 
-	_, err = db.Exec("INSERT INTO messages (image) VALUES ('test1')")
-	if err != nil {
-		log.Fatal(err)
-	}
+	// _, err = db.Exec("INSERT INTO messages (image) VALUES ('test1')")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	results, err := db.Query("SELECT * FROM messages")
 	if err != nil {

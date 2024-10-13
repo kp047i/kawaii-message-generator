@@ -67,7 +67,7 @@ func message(w http.ResponseWriter, r *http.Request) {
 	log.Println(requestBody.Image)
 	log.Println("★★★★★★★★★★★★★★★")
 
-	_, err = db.Exec(fmt.Sprintf("INSERT INTO messages (image) VALUES (%s)", requestBody.Image))
+	_, err = db.Exec(fmt.Sprintf(`INSERT INTO messages (image) VALUES ("%s")`, requestBody.Image))
 	if err != nil {
 		log.Fatal(err)
 	}

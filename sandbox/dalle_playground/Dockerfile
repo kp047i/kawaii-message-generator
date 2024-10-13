@@ -15,7 +15,7 @@ COPY . .
 
 # APIキーを環境変数として設定 (セキュリティを考慮して管理すること)
 ARG OPENAI_API_KEY
-ENV OPENAI_API_KEY="sk-WOjyOD8kzCGMIRrU4oTOd8_3juskS44m-XGhOCWnhuT3BlbkFJ77Kqt8oDKCpYCLC86h2-0xTjATr742mHLRf8ELRqoA"
+ENV OPENAI_API_KEY="SET_YOUR_KEY"
 
 # アプリケーションのエントリーポイントを指定
 CMD ["python", "generate_image.py"]

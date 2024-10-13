@@ -1,7 +1,10 @@
+import os
 import requests
 from openai import OpenAI
 
-client = OpenAI()
+# 環境変数からAPIキーを取得
+api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=api_key)
 
 # 画像生成と保存の関数を定義
 def generate_kawaii_image(selected_animal, selected_style, prompt, file_name):
@@ -25,12 +28,14 @@ def generate_kawaii_image(selected_animal, selected_style, prompt, file_name):
 selected_animal = "dog"
 selected_style = "plushie-style"
 
+# selected_animalは["cat", "dog", "rabbit", "Hamster", "Penguin", "whale", "Little Twin Stars(Sanrio)"]のlistから選択
 # selected_styleは["Chibi-style", "pop-style", "fairty-tale-style", "plushie-style", "whimsical-style"]のlistから選択
-# Chibi-style: アニメ
-# pop-style：ポップ
-# fairty-tale-style：やさしい
-# plushie-style：やわらかい
-# whimsical-style：ファンタジー
+#   Chibi-style: アニメ
+#   pop-style：ポップ
+#   fairty-tale-style：やさしい
+#   plushie-style：やわらかい
+#    whimsical-style：ファンタジー
+
 
 base_prompt = """
     Generate a kawaii {selected_style} image featuring a {selected_animal} holding a blank message card.

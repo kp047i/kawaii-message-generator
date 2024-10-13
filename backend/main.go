@@ -30,6 +30,10 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
+type ResponseBody struct {
+	Message string `json:"message"`
+}
+
 type RequestBody struct {
 	Image string `json:"image"`
 }
@@ -66,14 +70,16 @@ func message(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+	responseBody := ResponseBody{Message: "success"}
+
 	// レスポンスをJSON形式で返す
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK) // 200 OK
-	// err = json.NewEncoder(w).Encode(responseBody)
-	// if err != nil {
-	// 	http.Error(w, "レスポンスの作成に失敗しました", http.StatusInternalServerError)
-	// 	return
-	// }
+	err = json.NewEncoder(w).Encode(responseBody)
+	if err != nil {
+		http.Error(w, "レスポンスの作成に失敗しました", http.StatusInternalServerError)
+		return
+	}
 }
 
 // ------------------------------------------------------------------------------------------

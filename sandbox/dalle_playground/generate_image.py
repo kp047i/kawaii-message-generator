@@ -1,10 +1,13 @@
+import os
 import requests
 from openai import OpenAI
 
-client = OpenAI()
+# 環境変数からAPIキーを取得
+api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=api_key)
 
 # 画像生成と保存の関数を定義
-def generate_kawaii_image(selected_animal, prompt, file_name):
+def generate_kawaii_image(selected_animal, selected_style, prompt, file_name):
     response = client.images.generate(
         model="dall-e-3",
         prompt = prompt,
@@ -23,8 +26,19 @@ def generate_kawaii_image(selected_animal, prompt, file_name):
 
 
 selected_animal = "dog"
+selected_style = "plushie-style"
+
+# selected_animalは["cat", "dog", "rabbit", "Hamster", "Penguin", "whale", "Little Twin Stars(Sanrio)"]のlistから選択
+# selected_styleは["Chibi-style", "pop-style", "fairty-tale-style", "plushie-style", "whimsical-style"]のlistから選択
+#   Chibi-style: アニメ
+#   pop-style：ポップ
+#   fairty-tale-style：やさしい
+#   plushie-style：やわらかい
+#    whimsical-style：ファンタジー
+
+
 base_prompt = """
-    Generate a kawaii anime-style image featuring a {selected_animal} holding a blank message card.
+    Generate a kawaii {selected_style} image featuring a {selected_animal} holding a blank message card.
 
     The card must be centered exactly in the middle of the image, with the animal holding it directly from the sides.
     The card must take up exactly 70% of the width and 30% of the height of the image, and it should be perfectly horizontal with no tilt or rotation.
@@ -42,6 +56,6 @@ base_prompt = """
 
 for i in range(3):
     # プロンプトに動物の種類を埋め込む
-    prompt = base_prompt.format(selected_animal=selected_animal)
+    prompt = base_prompt.format(selected_animal=selected_animal, selected_style=selected_style)
     file_name = f"output/kawaii_image_{i + 1}.png"
-    generate_kawaii_image(selected_animal, prompt, file_name)
+    generate_kawaii_image(selected_animal, selected_style, prompt, file_name)

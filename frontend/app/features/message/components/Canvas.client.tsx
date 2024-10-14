@@ -51,7 +51,7 @@ const sketch = (p: P5CanvasInstance<CanvasProps>) => {
   };
 
   p.setup = () => {
-    p.createCanvas(512, 512);
+    p.createCanvas(400, 400);
     p.background(0);
   };
 

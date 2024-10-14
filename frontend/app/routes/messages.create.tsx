@@ -42,6 +42,8 @@ import { Label } from "../components/ui/label";
 
 import { LoaderCircle } from "lucide-react";
 import { NavLink } from "@remix-run/react";
+import { useToast } from "../hooks/use-toast";
+import { set } from "zod";
 
 export default function MessagesCreate() {
   const form = useForm<CreateMessage>({
@@ -61,6 +63,10 @@ export default function MessagesCreate() {
     positionY: 50,
     fontId: "1",
   });
+
+  const [creating, setCreating] = useState(false);
+
+  const { toast } = useToast();
 
   async function onSubmit(data: CreateMessage) {
     const res = await openAIClient.images.generate({
@@ -107,26 +113,43 @@ export default function MessagesCreate() {
   async function handleCreateButtonClick() {
     // 作成ボタンが押された時の処理
     // 画像を生成する
+    setCreating(true);
     const canvas = document.getElementsByTagName("canvas")[0];
 
-    const image = canvas.toDataURL("image/jpeg", 0.7);
+    const image = canvas.toDataURL("image/jpeg", 0.6);
     // console.log(image);
     const link = document.createElement("a");
     link.href = image;
-    link.download = "image.png";
+    // ファイル名に日付をつける
+    link.download = `message-${new Date().toISOString()}.jpeg`;
     link.click();
 
-    // 画像を保存する
-    const res = await fetch("http://localhost:8080/message", {
-      method: "POST",
-      body: JSON.stringify({
-        image,
-      }),
-    });
+    try {
+      // 画像を保存する
+      const res = await fetch("http://localhost:8080/message", {
+        method: "POST",
+        body: JSON.stringify({
+          image,
+        }),
+      });
+      console.log('res', res);
+      if (res.ok) {
+        console.log("success");
+        toast({
+          title: "成功",
+          description: "画像を保存しました",
+        });
+      }
 
-    if (res.ok) {
-      console.log("success");
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "エラー",
+        description: "画像の保存に失敗しました",
+        variant: "destructive",
+      });
     }
+    setCreating(false);
   }
 
   return (
@@ -367,6 +390,7 @@ export default function MessagesCreate() {
                   className="w-full mt-8"
                   variant="special"
                   onClick={handleCreateButtonClick}
+                  disabled={!imageUrl || creating}
                 >
                   作成
                 </Button>

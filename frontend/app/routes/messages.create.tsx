@@ -40,6 +40,8 @@ import { openAIClient } from "../features/message/libs";
 import { prompt } from "../features/message/utils";
 import { Label } from "../components/ui/label";
 
+import { LoaderCircle } from "lucide-react";
+
 export default function MessagesCreate() {
   const form = useForm<CreateMessage>({
     resolver: zodResolver(createMessageSchema),
@@ -49,9 +51,6 @@ export default function MessagesCreate() {
 
   const [color, setColor] = useColor("#561ecb");
 
-  // const [imageUrl, setImageUrl] = useState<string | null>(
-  //   "https://res.cloudinary.com/dlibdyano/image/upload/v1728796968/image_3.png"
-  // );
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const [message, setMessage] = useState<CanvasMessage>({
@@ -75,7 +74,9 @@ export default function MessagesCreate() {
 
     if (res.data && res.data.length > 0 && res.data[0].b64_json) {
       setImageUrl(res.data[0].b64_json);
-      setCurrentStep((prev) => prev + 1);
+      if (currentStep === 0) {
+        setCurrentStep((prev) => prev + 1);
+      }
     }
   }
 
@@ -107,7 +108,7 @@ export default function MessagesCreate() {
     // 画像を生成する
     const canvas = document.getElementsByTagName("canvas")[0];
 
-    const image = canvas.toDataURL("image/jpeg", 0.1);
+    const image = canvas.toDataURL("image/jpeg", 0.7);
     // console.log(image);
     const link = document.createElement("a");
     link.href = image;
@@ -125,19 +126,29 @@ export default function MessagesCreate() {
     if (res.ok) {
       console.log("success");
     }
-
-    // await fetch("http://localhost:8080/messages");
   }
 
   return (
     <div className="flex min-h-screen w-screen">
       <div className="h-screen grid place-content-center w-3/5">
-        {imageUrl ? (
-          <Canvas message={message} color={color} imageUrl={imageUrl} />
+        {form.formState.isSubmitting ? (
+          <LoaderCircle className="animate-spin w-16 h-16" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <p>画像を生成中...</p>
-          </div>
+          <>
+            {imageUrl ? (
+              <Canvas message={message} color={color} imageUrl={imageUrl} />
+            ) : (
+              <div
+                className="w-full h-full flex items-center justify-center border-dotted border-4 border-pink-200 "
+                style={{
+                  width: "512px",
+                  height: "512px",
+                }}
+              >
+                <p>画像はまだ作られていません</p>
+              </div>
+            )}
+          </>
         )}
       </div>
       <div className="w-2/5">
@@ -147,7 +158,7 @@ export default function MessagesCreate() {
 
             <div className="my-4">
               <Progress
-                value={currentStep * (100 / STEPS.length)}
+                value={(currentStep + 1) * (100 / STEPS.length)}
                 className="w-full"
               />
             </div>
@@ -158,7 +169,7 @@ export default function MessagesCreate() {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-2"
+                  className="space-y-8"
                 >
                   <div className="p-0">
                     <p>フレーム生成</p>
@@ -167,7 +178,7 @@ export default function MessagesCreate() {
                       作成することができるよ！！
                     </p>
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <FormField
                       control={form.control}
                       name="theme"
@@ -248,7 +259,7 @@ export default function MessagesCreate() {
             )}
 
             {STEPS[currentStep].id === "set-text" && (
-              <div>
+              <div className="space-y-8">
                 <div className="flex flex-col gap-2">
                   <Label>メッセージ</Label>
                   <Textarea
@@ -299,7 +310,7 @@ export default function MessagesCreate() {
                   />
                 </div>
 
-                <div>
+                <div className="mb-5">
                   <Label>テキストの位置</Label>
                   <div>
                     <div className="grid grid-cols-2 gap-4">
@@ -344,7 +355,7 @@ export default function MessagesCreate() {
                 </div>
 
                 <Button
-                  className="w-full"
+                  className="w-full mt-8"
                   variant="special"
                   onClick={handleCreateButtonClick}
                 >

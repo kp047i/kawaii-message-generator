@@ -156,7 +156,10 @@ export default function MessagesCreate() {
     <div className="flex min-h-screen w-screen">
       <div className="h-screen grid place-content-center w-3/5">
         {form.formState.isSubmitting ? (
+          <div className="text-pink-400">
+
           <LoaderCircle className="animate-spin w-16 h-16" />
+            </div>
         ) : (
           <>
             {imageUrl ? (

@@ -61,4 +61,28 @@ export const FONTS = [
     id: "2",
     name: "Hachi Maru Pop",
   },
+  {
+    id: "3",
+    name: "Yomogi",
+  },
+  {
+    id: "4",
+    name: "DotGothic16",
+  },
+  {
+    id: "5",
+    name: "Kaisei Tokumin",
+  },
+  {
+    id: "6",
+    name: "Darumadrop One",
+  },
+  {
+    id: "7",
+    name: "Monomaniac One",
+  },
+  {
+    id: "8",
+    name: "Dela Gothic One",
+  },
 ];

@@ -7,17 +7,25 @@ import { FONTS } from "../constants";
 export type CanvasProps = {
   message: CanvasMessage;
   color: IColor;
+  imageUrl: string;
 };
 
-export function Canvas({ message, color }: CanvasProps) {
+export function Canvas({ message, color, imageUrl }: CanvasProps) {
+  console.log("Canvas", message, color, imageUrl);
   return (
     <div className="">
-      <ReactP5Wrapper sketch={sketch} message={message} color={color} />
+      <ReactP5Wrapper
+        sketch={sketch}
+        message={message}
+        color={color}
+        imageUrl={imageUrl}
+      />
     </div>
   );
 }
 
 const sketch = (p: P5CanvasInstance<CanvasProps>) => {
+  let imageUrl= "https://example.com/image.png";
   let image: p5.Image;
   let textValue: string;
   let fontSize: number;
@@ -26,11 +34,6 @@ const sketch = (p: P5CanvasInstance<CanvasProps>) => {
   let positionY: number;
   let fontId: string;
 
-  p.preload = () => {
-    image = p.loadImage(
-      "https://res.cloudinary.com/dlibdyano/image/upload/v1728796968/image_3.png"
-    );
-  };
 
   p.updateWithProps = (props) => {
     textValue = props.message.text;
@@ -39,6 +42,12 @@ const sketch = (p: P5CanvasInstance<CanvasProps>) => {
     positionX = props.message.positionX;
     positionY = props.message.positionY;
     fontId = props.message.fontId;
+
+    // 画像が変わっていたら再読み込み
+    if (imageUrl !== props.imageUrl) {
+      imageUrl = props.imageUrl;
+      image = p.loadImage(`data:image/png;base64,${props.imageUrl}`);
+    }
   };
 
   p.setup = () => {
@@ -53,6 +62,10 @@ const sketch = (p: P5CanvasInstance<CanvasProps>) => {
     p.fill(color);
     p.textSize(fontSize);
     p.textAlign(p.CENTER, p.CENTER);
-    p.text(textValue, positionX, positionY);
+    p.text(
+      textValue,
+      (p.width * positionX) / 100,
+      (p.height * positionY) / 100
+    );
   };
 };

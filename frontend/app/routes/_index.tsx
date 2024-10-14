@@ -19,7 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from "../components/ui/form";
-import OpenAI from "openai";
 import { CreateMessage, createMessageSchema } from "../features/message/schema";
 import {
   Select,
@@ -29,38 +28,14 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { CHARACTERS, THEMES } from "../features/message/constants";
+import { prompt } from "../features/message/utils";
+import { openAIClient } from "../features/message/libs";
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
-
-const client = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
-
-function prompt(selected_style: string, selected_animal: string) {
-  return `
-    Generate a kawaii ${selected_style} image featuring a {selected_animal} holding a blank message card.
-    This image is to express gratitude to those who have supported me.
-
-    The card must be centered exactly in the middle of the image, with the animal holding it directly from the sides.
-    The card must take up exactly 70% of the width and 30% of the height of the image, and it should be perfectly horizontal with no tilt or rotation.
-    The edges of the card should be sharp and clear, and the card itself should remain completely blank, with no text or decorations of any kind. 
-
-    The card is being held by a ${selected_animal}.
-    The card is placed exactly in the middle of the image with enough blank space for writing a message.
-    The card should be large and prominent, taking up a significant portion of the image, while still leaving enough space for the {selected_animal} to be visible holding it.
-    The card should appear larger than the animal, drawing more attention, while the animal remains cute and secondary.
-
-    The background should be soft, using pastel colors, and feature small, simple kawaii elements such as stars, clouds, and hearts.
-    These background elements should be positioned only around the edges of the image, so they do not overlap or interfere with the card or the animal.
-
-    Ensure the overall theme is kawaii, with a soft, playful design.
-    The card must always be prominent, and the background elements should not distract from the central card and animal figure.`;
-}
 
 export default function Index() {
   const form = useForm<CreateMessage>({
@@ -69,7 +44,7 @@ export default function Index() {
 
   async function onSubmit(data: CreateMessage) {
     console.log(data);
-    const res = await client.images.generate({
+    const res = await openAIClient.images.generate({
       model: "dall-e-3",
       size: "1024x1024",
       quality: "standard",

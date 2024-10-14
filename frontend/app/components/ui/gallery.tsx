@@ -7,7 +7,7 @@ type GalleryProps = {
 
 const Gallery: React.FC<GalleryProps> = ({ messages }) => {
   return (
-    <div className="grid grid-cols-3 gap-4 p-4">
+    <div className="grid grid-cols-3 gap-4">
       {messages.map((message, index) => (
         <div key={index} className="w-full">
           <img

@@ -41,6 +41,7 @@ import { prompt } from "../features/message/utils";
 import { Label } from "../components/ui/label";
 
 import { LoaderCircle } from "lucide-react";
+import { NavLink } from "@remix-run/react";
 
 export default function MessagesCreate() {
   const form = useForm<CreateMessage>({
@@ -153,14 +154,22 @@ export default function MessagesCreate() {
       </div>
       <div className="w-2/5">
         <Card className="flex flex-col h-full w-full rounded-none gap-6">
-          <CardHeader>
-            <h1>kawaii messanger</h1>
+          <CardHeader className="space-y-2">
+            <NavLink
+              to="/messages/list"
+              className="text-sm text-blue-500 hover:underline"
+            >
+              メッセージ一覧へ
+            </NavLink>
+            <div>
+              <h1 className="text-lg text-pink-600">kawaii messanger</h1>
 
-            <div className="my-4">
-              <Progress
-                value={(currentStep + 1) * (100 / STEPS.length)}
-                className="w-full"
-              />
+              <div className="my-1">
+                <Progress
+                  value={(currentStep + 1) * (100 / STEPS.length)}
+                  className="w-full"
+                />
+              </div>
             </div>
           </CardHeader>
 

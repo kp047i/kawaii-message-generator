@@ -30,7 +30,7 @@ export async function clientLoader() {
 export default function Messages() {
   const data = useLoaderData<typeof clientLoader>();
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center max-w-4xl mx-auto p-6j">
       <Card className="w-full max-w-6xl p-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg">
         <CardHeader>
           <CardTitle>Kawaii Library</CardTitle>

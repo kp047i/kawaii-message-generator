@@ -18,3 +18,9 @@ export const canvasMessageSchema = z.object({
   fontId: z.string().refine((id) => FONTS.some((font) => font.id === id)),
 });
 export type CanvasMessage = z.infer<typeof canvasMessageSchema>;
+
+export const messageSchema = z.object({
+  id: z.number(),
+  image: z.string(),
+});
+export type Message = z.infer<typeof messageSchema>;
